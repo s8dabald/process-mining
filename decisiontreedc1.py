@@ -1,5 +1,4 @@
 from math import log
-
 input_string= """Day Forecast Temperature Humidity Wind-strength Tennis
 D1 Sunny Hot High Weak No
 D2 Sunny Hot High Strong No
@@ -22,7 +21,7 @@ input_dict = {}
 for item in input_list[1:]:
 
     input_dict[item[0]] = dict( zip(input_list[0][1:],item[1:]) )
-
+list_of_paths =[]
 def count_occurences(argu):
     yes = 0
     no = 0
@@ -58,6 +57,9 @@ def node_calc(existing_path={}):
             except ZeroDivisionError:
                 if possible_values[possible_values.index(value)][0] == 'Tennis':
                     print (existing_path,count_occurences(existing_path),"no more splits left")
+                    list_of_paths.append(existing_path)
+                    list_of_paths[list_of_paths.index(existing_path)].update({'result': count_occurences(existing_path)})
+
                     return()
 
                 possible_values[possible_values.index(value)].append(1)
@@ -72,7 +74,7 @@ def node_calc(existing_path={}):
 
         else:
             for value in possible_values:
-                result += value[2]/sum(y[2] for y in possible_values) * value[3]
+                result += value[2]/sum(y[2] for y in possible_values) * value[3] #weighted entropy for node
             all_entropies[x]= result
 
     tennis = all_entropies['Tennis']
@@ -98,5 +100,9 @@ def recursive_loop(existing_path={}):
         check.update(x)
         recursive_loop(check)
 
+def get_paths():
+    recursive_loop()
+    return(list_of_paths)
 
-recursive_loop()
+if __name__ == '__main__':
+    recursive_loop()
