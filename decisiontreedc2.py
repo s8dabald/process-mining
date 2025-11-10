@@ -42,30 +42,47 @@ def count_occurences(argu):
 
 def select_node(path,nodes):
     result = {}
+    tennis = 0
     for x in nodes:
         calc = []
+        weigths = []
         p=0
         for y in node_values[x]:
             path_new = path.copy()
             path_new[x] = y
             a,b = count_occurences(path_new)
-            calc.append(a+b)
-        try:
-            for y in calc:
-                p += (y/sum(calc))**2
-        except ZeroDivisionError:
-            #print(path,count_occurences(path),"end")
-            return
-        result[x] = 1-p
+            calc.append([a,b])
+
+        total = 0
+        for y in calc:
+            total += y[0]+y[1]
+
+        for y in calc:
+            a = y[0]
+            b = y[1]
+            try:
+                p += (1-(((a/(a+b))**2)+((b/(a+b))**2)))*((a+b)/total)
+            except ZeroDivisionError:
+                p+=0
+
+        result[x] = p
+    a,b = count_occurences(path)
+    tennis = 1-(((a/(a+b))**2)+((b/(a+b))**2))
+    for x in result:
+        result[x] = tennis - result[x]
+
+
     winner = max(result, key=result.get)
-    #print(result)
+    print("result",result)
+    print(winner)
     return winner
 def recursive_loop(existing_path={}):
     a,b = count_occurences(existing_path)
     if a==0 or b == 0:
-        print(existing_path, count_occurences(existing_path))
-        list_of_paths.append(existing_path)
-        list_of_paths[list_of_paths.index(existing_path)].update({'result': count_occurences(existing_path)})
+        if count_occurences(existing_path) != (0 , 0):
+            print(existing_path, count_occurences(existing_path))
+            list_of_paths.append(existing_path)
+            list_of_paths[list_of_paths.index(existing_path)].update({'result': count_occurences(existing_path)})
         return
     possible_nodes=[]
     for x in node_values:
@@ -73,10 +90,14 @@ def recursive_loop(existing_path={}):
             possible_nodes.append(x)
 
     selected_node = select_node(existing_path, possible_nodes)
+   # print("test",existing_path, possible_nodes)
+    #try:
     for x in node_values[selected_node]:
         new_path = existing_path.copy()
         new_path[selected_node] = x
         recursive_loop(new_path)
+    #except KeyError:
+     #   return
 
 def get_paths():
     recursive_loop()
