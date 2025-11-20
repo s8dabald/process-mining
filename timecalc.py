@@ -17,7 +17,7 @@ def counter(type ="min"):
         for row in df_cases.itertuples():
             if last != "":
                 #print("In Case", row._1,"from", last, "-", row.Activity, "it took", row.delta)
-                transition =last + '-'+ row.Activity
+                transition =last + '  -  '+ row.Activity
                 if transition not in result:
                     result.update({transition: row.delta})
                     counter.update({transition:1})
@@ -40,7 +40,11 @@ def counter(type ="min"):
             result.update({x:a/b})
     return result
 
+types = {"Average transition time":"avg","Minimal transition time": "min","Maximum transition time": "max"}
 
-print("Average transition time:\n",counter("avg"))
-print("Minimal transition time:\n",counter("min"))
-print("Maximum transition time:\n",counter("max"))
+for x in types.keys():
+    print(x)
+    values = counter(types[x])
+    for y in values.keys():
+        print(y,values[y])
+    print("\n")
