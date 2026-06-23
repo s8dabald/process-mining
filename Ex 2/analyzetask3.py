@@ -26,7 +26,7 @@ def alpha_miner():
 def heuristic_miner():
     net= pm4py.discover_heuristics_net(log,dependency_threshold=0.5,and_threshold=0.65,loop_two_threshold=0.5)
     pm4py.view_heuristics_net(net)
-    pm4py.save_vis_heuristics_net(net,"heuristic_net.png")
+    pm4py.save_vis_heuristics_net(net, "heuristic_net.png")
 
 def heuristic_miner_petri():
 
